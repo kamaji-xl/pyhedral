@@ -14,7 +14,7 @@ def dice_roller(req, stat_list):
     sides = req["sides"]
     char_name = req["name"]
     roll_type = req["type"]
-    roll_mod = req["mod"]
+    target = req["target"]
 
     if char_name not in stat_list:
         new_char = Stat(char_name)
@@ -25,13 +25,16 @@ def dice_roller(req, stat_list):
         sides = sides - 1
 
     for i in range(dice_count):
+        success_flag = "Fail"
         roll = random.randint(start, sides)
         results.append(roll)
-        stat_list[char_name].rolls[roll_type].append([roll, roll_mod])
+        if roll < target:
+            success_flag = "Pass"
+        stat_list[char_name].rolls[roll_type].append([roll, target, success_flag])
 
-    print(f"\n{results}")
-    for stat in stat_list:
-        print(stat_list[stat])
+    # print(f"\n{results}")
+    # for stat in stat_list:
+    #     print(stat_list[stat])
 
     return {
         "results": results
